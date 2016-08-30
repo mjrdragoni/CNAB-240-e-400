@@ -8,6 +8,8 @@
     
     $ident_regh = substr($content, 0, 1  ); 
 
+    echo "<h1><center>Arquivo de Retorno do Bradesco</center></h1><br><br>";
+
     echo "<h3>Header</h3> <br><br> <b>Identificação do Registro: </b> " . $ident_regh . "<br>";
 
     $ident_arq_ret = substr($content, 1, 1); 
@@ -42,9 +44,9 @@
 
     echo "Nome do Banco por Extenso: " . $nome_banco . "<br>";
 
-    $data_grav_arq = substr($content, 94, 6);
-
-    echo "Data da Gravação do Arquivo: " . $data_grav_arq .  "<br>";
+    $data_grav_arq = substr($content, 94, 6);  
+    
+    echo "Data da Gravação do Arquivo: " . substr($data_grav_arq, 0,2)."/".substr($data_grav_arq, 2,2)."/". substr($data_grav_arq, 4,2) ."<br>"; 
 
     $dens_grav = substr($content, 100, 8);
 
@@ -60,7 +62,7 @@
 
     $data_cred = substr($content, 379, 6);
 
-    echo "Data do Crédito: " . $data_cred . "<br>";
+    echo "Data do Crédito: " . substr($data_cred, 0,2)."/".substr($data_cred, 2,2)."/". substr($data_cred, 4,2) ."<br>"; 
 
     $branco2 = substr($content, 385, 9);
 
@@ -150,11 +152,11 @@
                 $id_oc = $result['descricao'] ;
             }
 
-        echo "Identificação de Ocorrência: " .$ident_ocor . " - " . $id_oc . "<br>";
+        echo "Identificação de Ocorrência: " .$ident_ocor . " - " . utf8_encode($id_oc) . "<br>";
 
         $data_ocorr_banco = substr($arquivo[$i], 110, 6);
 
-        echo "Data Ocorrência no Banco: " . $data_ocorr_banco . "<br>";
+        echo "Data Ocorrência no Banco: " . substr($data_ocorr_banco, 0,2)."/".substr($data_ocorr_banco, 2,2)."/". substr($data_ocorr_banco, 4,2) ."<br>"; 
 
         $num_doc = substr($arquivo[$i], 116, 10);
 
@@ -166,11 +168,15 @@
 
         $data_venc_titu = substr($arquivo[$i], 146, 6);
 
-        echo "Data Vencimento do Título: " . $data_venc_titu  . "<br>";
+        echo "Data Vencimento do Título: " . substr($data_venc_titu, 0,2)."/".substr($data_venc_titu, 2,2)."/". substr($data_venc_titu, 4,2) ."<br>"; 
 
         $val_tit = substr($arquivo[$i], 152, 13);
 
-        echo "Valor do Título: " . $val_tit . "<br>";
+        $val_tit = substr($val_tit, 0,11) .".".substr($val_tit, 11,2);
+
+        $val_tit = number_format($val_tit,2,",",".");
+
+        echo "Valor do Título: R$ " . $val_tit . "<br>";
 
         $banco_cobr = substr($arquivo[$i], 165, 3);
 
@@ -186,42 +192,75 @@
 
         $desp_cobr = substr($arquivo[$i], 175, 13);
 
-        echo " Despesas de cobrança para os Códigos de Ocorrência: " . $desp_cobr . "<br>
-                02 - Entradas Confirmadas<br>
-                28 - Débitos de Tarifas<br>";
+        $desp_cobr = substr($desp_cobr, 0,11) .".".substr($desp_cobr, 11,2);
 
+        $desp_cobr = number_format($desp_cobr,2,",",".");
+
+        echo " Despesas de cobrança para os Códigos de Ocorrência  02 - Entradas Confirmadas e 28 - Débitos de Tarifas: R$ ". $desp_cobr ."<br>";
 
         $outr_desp_cust_prote = substr($arquivo[$i], 188, 13);
 
-        echo "Outras despesas Custas de Protesto: " . $outr_desp_cust_prote . "<br>";
+        $outr_desp_cust_prote = substr($outr_desp_cust_prote, 0,11) .".".substr($outr_desp_cust_prote, 11,2);
 
-        $jur_ope_atr = substr($arquivo[$i], 201, 13); 
+        $outr_desp_cust_prote = number_format($outr_desp_cust_prote,2,",",".");
 
-        echo "Juros Operação em Atraso: " . $jur_ope_atr . "<br>";
+        echo "Outras despesas Custas de Protesto: R$" . $outr_desp_cust_prote . "<br>";
+
+        $jur_ope_atr = substr($arquivo[$i], 201, 13);
+
+        $jur_ope_atr = substr($jur_ope_atr, 0,11) .".".substr($jur_ope_atr, 11,2);
+
+        $jur_ope_atr = number_format($jur_ope_atr,2,",","."); 
+
+        echo "Juros Operação em Atraso: R$ " . $jur_ope_atr . "<br>";
 
         $iof_dev = substr($arquivo[$i], 214, 13);
 
-        echo "IOF Devido: " . $iof_dev . "<br>";
+        $iof_dev = substr($iof_dev, 0,11) .".".substr($iof_dev, 11,2);
+
+        $iof_dev = number_format($iof_dev,2,",","."); 
+
+        echo "IOF Devido: R$ " . $iof_dev . "<br>";
 
         $abat_conced_tit = substr($arquivo[$i], 227, 13); 
 
-        echo "Abatimento Concedido sobre o Título: " . $abat_conced_tit . "<br>";
+        $abat_conced_tit = substr($abat_conced_tit, 0,11) .".".substr($abat_conced_tit, 11,2);
+
+        $abat_conced_tit = number_format($abat_conced_tit,2,",",".");
+
+        echo "Abatimento Concedido sobre o Título: R$ " . $abat_conced_tit . "<br>";
 
         $desc_conc = substr($arquivo[$i], 240, 13);
 
-        echo "Desconto Concedido: " . $desc_conc . "<br>";
+        $desc_conc = substr($desc_conc, 0,11) .".".substr($desc_conc, 11,2);
+
+        $desc_conc = number_format($desc_conc,2,",",".");
+
+        echo "Desconto Concedido: R$ " . $desc_conc . "<br>";
 
         $val_pago = substr($arquivo[$i], 253, 13);
 
-        echo "Valor Pago: " . $val_pago . "<br>";
+        $val_pago = substr($val_pago, 0,11) .".".substr($val_pago, 11,2);
+
+        $val_pago = number_format($val_pago,2,",",".");
+
+        echo "Valor Pago: R$ " . $val_pago . "<br>";
 
         $juros_mora = substr($arquivo[$i], 266, 13);
 
-        echo "Juros de Mora: " .$juros_mora . "<br>";
+        $juros_mora = substr($juros_mora, 0,11) .".".substr($juros_mora, 11,2);
+
+        $juros_mora = number_format($juros_mora,2,",",".");
+
+        echo "Juros de Mora: R$ " .$juros_mora . "<br>";
 
         $out_cred = substr($arquivo[$i], 279, 13);
 
-        echo "Outros Créditos: " .$out_cred . "<br>";
+        $out_cred = substr($out_cred, 0,11) .".".substr($out_cred, 11,2);
+
+        $out_cred = number_format($out_cred,2,",",".");
+
+        echo "Outros Créditos: R$ " .$out_cred . "<br>";
 
         $branco = substr($arquivo[$i], 292, 2);
 
@@ -229,12 +268,22 @@
 
         $cod_25_19 = substr($arquivo[$i], 294 ,1);
 
-        echo "Motivo do Código de Ocorrência 25 (Confirmação de Instrução de Protesto Falimentar e <br>
-            (Do Código de Ocorrência 19 Confirmação de Instrução de Protesto): ". $cod_25_19 . "<br>";
+            $sql = "SELECT motivos.descricao FROM motivos  INNER JOIN
+                    detalhes_op ON detalhes_op.id = motivos.id_dt
+                    WHERE motivos.codigo = '$mot_rej_109_110' AND detalhes_op.descricao = '$id_oc' ";
+
+            $r = @mysqli_query($conexao, $sql);
+
+            while ($result = mysqli_fetch_array($r)) {
+                $mot_rej_cod_25_19 = $result['descricao'] ;
+            } 
+
+        echo "Motivo do Código de Ocorrência 25 (Confirmação de Instrução de Protesto Falimentar e
+            (Do Código de Ocorrência 19 Confirmação de Instrução de Protesto): ". $cod_25_19 . " - ". $mot_rej_cod_25_19. "<br>";
 
         $data_cred = substr($arquivo[$i], 295, 6);
 
-        echo "Data do Crédito: " . $data_cred . "<br>";
+        echo "Data do Crédito: " . substr($data_cred, 0,2)."/".substr($data_cred, 2,2)."/". substr($data_cred, 4,2) ."<br>"; 
 
         $orig_pag = substr($arquivo[$i], 301, 3);
 
@@ -248,21 +297,81 @@
 
         echo "Quando cheque Bradesco informe 0237: " . $qnd_cheq_brad_inf . "<br>";
 
-        $mot_rej_109_110 = substr($arquivo[$i], 318, 2);
+        $mot_rej_109_110_1 = substr($arquivo[$i], 318, 2);
+        $mot_rej_109_110_2 = substr($arquivo[$i], 320, 2);
+        $mot_rej_109_110_3 = substr($arquivo[$i], 322, 2);
+        $mot_rej_109_110_4 = substr($arquivo[$i], 324, 2);
+        $mot_rej_109_110_5 = substr($arquivo[$i], 326, 2);
 
-             $sql = "SELECT motivos.descricao FROM motivos INNER JOIN
-                    operacoes ON operacoes.id = motivos.id_op INNER JOIN
+
+
+             $sql = "SELECT motivos.descricao FROM motivos  INNER JOIN
                     detalhes_op ON detalhes_op.id = motivos.id_dt
-                    WHERE motivos.codigo = '$mot_rej_109_110' AND detalhes_op.descricao = '$id_oc' ";
+                    WHERE motivos.codigo = '$mot_rej_109_110_1' AND detalhes_op.descricao = '$id_oc' ";
 
             $r = @mysqli_query($conexao, $sql);
 
             while ($result = mysqli_fetch_array($r)) {
-                $mot_rej_ent_conf = $result['descricao'] ;
-            }    
+                $mot_rej_ent_conf_1 = $result['descricao'] ;
+            }   
 
-        echo "Motivos das Rejeições para os Códigos de Ocorrência da Posição 109 a 110: " . $mot_rej_109_110 . 
-        " - " . $mot_rej_ent_conf ."<br>";
+            if ($mot_rej_109_110_2 != '00') {
+                $sql = "SELECT motivos.descricao FROM motivos  INNER JOIN
+                        detalhes_op ON detalhes_op.id = motivos.id_dt
+                        WHERE motivos.codigo = '$mot_rej_109_110_2' AND detalhes_op.descricao = '$id_oc' ";
+
+                $r = @mysqli_query($conexao, $sql);
+
+                while ($result = mysqli_fetch_array($r)) {
+                    $mot_rej_ent_conf_2 = $result['descricao'] ;
+                } 
+            } 
+
+            if ($mot_rej_109_110_3 != '00'){  
+
+                $sql = "SELECT motivos.descricao FROM motivos  INNER JOIN
+                        detalhes_op ON detalhes_op.id = motivos.id_dt
+                        WHERE motivos.codigo = '$mot_rej_109_110_3' AND detalhes_op.descricao = '$id_oc' ";
+
+                $r = @mysqli_query($conexao, $sql);
+
+                while ($result = mysqli_fetch_array($r)) {
+                    $mot_rej_ent_conf_3 = $result['descricao'] ;
+                }  
+            } 
+
+
+            if ($mot_rej_109_110_4 != '00'){
+                $sql = "SELECT motivos.descricao FROM motivos  INNER JOIN
+                        detalhes_op ON detalhes_op.id = motivos.id_dt
+                        WHERE motivos.codigo = '$mot_rej_109_110_4' AND detalhes_op.descricao = '$id_oc' ";
+
+                $r = @mysqli_query($conexao, $sql);
+
+                while ($result = mysqli_fetch_array($r)) {
+                    $mot_rej_ent_conf_4 = $result['descricao'] ;
+                }
+            }   
+
+            if ($mot_rej_109_110_5 != '00'){
+                $sql = "SELECT motivos.descricao FROM motivos  INNER JOIN
+                        detalhes_op ON detalhes_op.id = motivos.id_dt
+                        WHERE motivos.codigo = '$mot_rej_109_110_5' AND detalhes_op.descricao = '$id_oc' ";
+
+                $r = @mysqli_query($conexao, $sql);
+
+                while ($result = mysqli_fetch_array($r)) {
+                    $mot_rej_ent_conf_5 = $result['descricao'] ;
+                } 
+            }      
+
+
+        echo "Motivos das Rejeições para os Códigos de Ocorrência da Posição 109 a 110: " . $mot_rej_109_110_1 . 
+        " - " . utf8_encode($mot_rej_ent_conf_1) ." / ". $mot_rej_109_110_2 . 
+        " - " . utf8_encode($mot_rej_ent_conf_2) ." / ". $mot_rej_109_110_3 . 
+        " - " . utf8_encode($mot_rej_ent_conf_3) ." / ". $mot_rej_109_110_4 . 
+        " - " . utf8_encode($mot_rej_ent_conf_4) ." / ". $mot_rej_109_110_5 . 
+        " - " . utf8_encode($mot_rej_ent_conf_5)  ."<br>";
 
         $branco = substr($arquivo[$i], 328, 40);
 
@@ -309,9 +418,13 @@
 
     echo "Quantidade de Títulos em Cobrança: " .$qtde_tit_cobr . "<br>";
 
-    $val_tot_cobr = substr($trailler, 25, 14); 
+    $val_tot_cobr = substr($trailler, 25, 14);
 
-    echo "Valor Total em Cobrança: " . $val_tot_cobr . "<br>";
+    $val_tot_cobr = substr($val_tot_cobr, 0,12) .".".substr($val_tot_cobr, 12,2);
+
+    $val_tot_cobr = number_format($val_tot_cobr,2,",",".");
+
+    echo "Valor Total em Cobrança: R$ " . $val_tot_cobr . "<br>";
 
     $num_av_banc = substr($trailler, 39, 8);
 
@@ -323,11 +436,19 @@
 
     $val_reg_oc_2 = substr($trailler, 62, 12);
 
-    echo "Valor dos Registros – Ocorrência 02 - Confirmação de Entradas: " . $val_reg_oc_2 . "<br>";
+    $val_reg_oc_2 = substr($val_reg_oc_2, 0,10) .".".substr($val_reg_oc_2, 10,2);
+
+    $val_reg_oc_2 = number_format($val_reg_oc_2,2,",",".");    
+
+    echo "Valor dos Registros – Ocorrência 02 - Confirmação de Entradas: R$ " . $val_reg_oc_2 . "<br>";
 
     $val_reg_oc_6_liq = substr($trailler, 74, 12);
 
-    echo "Valor dos Registros–Ocorrência 06 – Liquidação: " . $val_reg_oc_6_liq . "<br>";
+    $val_reg_oc_6_liq = substr($val_reg_oc_6_liq, 0,10) .".".substr($val_reg_oc_6_liq, 10,2);
+
+    $val_reg_oc_6_liq = number_format($val_reg_oc_6_liq,2,",",".");   
+
+    echo "Valor dos Registros–Ocorrência 06 – Liquidação: R$ " . $val_reg_oc_6_liq . "<br>";
 
     $qtde_reg_oc_6 = substr($trailler, 86, 5); 
 
@@ -335,7 +456,11 @@
 
     $val_reg_oc_6 = substr($trailler, 91, 12);
 
-    echo "Valor dos Registros - Ocorrência 06: " . $val_reg_oc_6 . "<br>";
+    $val_reg_oc_6 = substr($val_reg_oc_6, 0,10) .".".substr($val_reg_oc_6, 10,2);
+
+    $val_reg_oc_6 = number_format($val_reg_oc_6,2,",",".");   
+
+    echo "Valor dos Registros - Ocorrência 06: R$ " . $val_reg_oc_6 . "<br>";
 
     $qtde_reg_oc_9_10_tit_baix = substr($trailler, 103, 5);
 
@@ -343,7 +468,11 @@
 
     $val_reg_oc_9_10_tit_baix = substr($trailler, 108, 12);
 
-    echo "Valor dos Registros – Ocorrência 09 e 10 - Títulos baixados: " . $val_reg_oc_9_10_tit_baix . "<br>";
+    $val_reg_oc_9_10_tit_baix = substr($val_reg_oc_9_10_tit_baix, 0,10) .".".substr($val_reg_oc_9_10_tit_baix, 10,2);
+
+    $val_reg_oc_9_10_tit_baix = number_format($val_reg_oc_9_10_tit_baix,2,",","."); 
+
+    echo "Valor dos Registros – Ocorrência 09 e 10 - Títulos baixados: R$ " . $val_reg_oc_9_10_tit_baix . "<br>";
 
     $qtde_reg_oc_13_abat_canc = substr($trailler, 120, 5);
 
@@ -351,7 +480,11 @@
 
     $val_reg_oc_13 = substr($trailler, 125, 12);
 
-    echo "Valor dos Registros – Ocorrência 13 - Abatimento Cancelado: " . $val_reg_oc_13 . "<br>";
+    $val_reg_oc_13 = substr($val_reg_oc_13, 0,10) .".".substr($val_reg_oc_13, 10,2);
+
+    $val_reg_oc_13 = number_format($val_reg_oc_13,2,",","."); 
+
+    echo "Valor dos Registros – Ocorrência 13 - Abatimento Cancelado: R$ " . $val_reg_oc_13 . "<br>";
 
     $qtde_reg_oc_14 = substr($trailler, 137, 5); 
 
@@ -359,7 +492,11 @@
 
     $val_reg_oc_14 = substr($trailler, 142, 12);
 
-    echo "Valor dos Registros – Ocorrência 14 - Vencimento Alterado: " . $val_reg_oc_14 . "<br>";
+    $val_reg_oc_14 = substr($val_reg_oc_14, 0,10) .".".substr($val_reg_oc_14, 10,2);
+
+    $val_reg_oc_14 = number_format($val_reg_oc_14,2,",","."); 
+
+    echo "Valor dos Registros – Ocorrência 14 - Vencimento Alterado: R$ " . $val_reg_oc_14 . "<br>";
 
     $qtde_reg_oc_12 = substr($trailler, 154, 5); 
 
@@ -367,7 +504,11 @@
 
     $val_reg_oc_12 = substr($trailler, 159, 12);
 
-    echo "Valor dos Registros – Ocorrência 12 - Abatimento Concedido: " . $val_reg_oc_12 . "<br>";
+    $val_reg_oc_12 = substr($val_reg_oc_12, 0,10) .".".substr($val_reg_oc_12, 10,2);
+
+    $val_reg_oc_12 = number_format($val_reg_oc_12,2,",","."); 
+
+    echo "Valor dos Registros – Ocorrência 12 - Abatimento Concedido: R$ " . $val_reg_oc_12 . "<br>";
 
     $qtde_reg_oc_19 = substr($trailler, 171, 5); 
 
@@ -375,11 +516,19 @@
 
     $val_reg_oc_19 = substr($trailler, 176, 12);
 
-    echo "Valor dos Registros – Ocorrência 19 - Confirmação da Instrução de Protesto: " . $val_reg_oc_19 . "<br>";
+    $val_reg_oc_19 = substr($val_reg_oc_19, 0,10) .".".substr($val_reg_oc_19, 10,2);
 
-    $val_tot_rat_efet = substr($trailler, 362, 15);
+    $val_reg_oc_19 = number_format($val_reg_oc_19,2,",","."); 
 
-    echo "Valor Total dos Rateios Efetuados: " . $val_tot_rat_efet . "<br>";
+    echo "Valor dos Registros – Ocorrência 19 - Confirmação da Instrução de Protesto: R$ " . $val_reg_oc_19 . "<br>";
+
+    $val_tot_rat_efet = substr($trailler, 176, 12);
+
+    $val_tot_rat_efet = substr($val_tot_rat_efet, 0,10) .".".substr($val_tot_rat_efet, 10,2);
+
+    $val_tot_rat_efet = number_format($val_tot_rat_efet,2,",","."); 
+
+    echo "Valor Total dos Rateios Efetuados: R$ " . $val_tot_rat_efet . "<br>";
 
     $qtde_tot_rat_efet = substr($trailler, 377, 8);
 

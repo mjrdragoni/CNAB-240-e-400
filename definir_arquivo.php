@@ -23,7 +23,7 @@
 </head>
 <body>
 
-	<center><h1>Por favor escolha o Banco e o Documento os quais deseja fazer a Leitura do  <br><br> Arquivo de Retorno</h1></center><br><br>
+	<center><h1>Por favor escolha o Banco e o Documento que você deseja fazer a Leitura do  <br><br> Arquivo de Retorno</h1></center><br><br>
 
 	<center>
 
